@@ -13,15 +13,15 @@ class Lyrics extends Component {
   componentDidMount() {
     axios
       .get(
-        `http://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/track.lyrics.get?track_id=${
+        `https://cors-anywhere.herokuapp.com/http://api.musixmatch.com/ws/1.1/track.lyrics.get?track_id=${
           this.props.match.params.id
         }&apikey=${process.env.REACT_APP_MM_KEY}`
       )
       .then(res => {
-        // console.log(res.data);
         this.setState({ lyrics: res.data.message.body.lyrics });
+
         return axios.get(
-          `http://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/track.get?track_id=${
+          `https://cors-anywhere.herokuapp.com/http://api.musixmatch.com/ws/1.1/track.get?track_id=${
             this.props.match.params.id
           }&apikey=${process.env.REACT_APP_MM_KEY}`
         );
@@ -34,6 +34,7 @@ class Lyrics extends Component {
 
   render() {
     const { track, lyrics } = this.state;
+
     if (
       track === undefined ||
       lyrics === undefined ||
@@ -56,16 +57,17 @@ class Lyrics extends Component {
               <p className="card-text">{lyrics.lyrics_body}</p>
             </div>
           </div>
+
           <ul className="list-group mt-3">
             <li className="list-group-item">
               <strong>Album ID</strong>: {track.album_id}
             </li>
             <li className="list-group-item">
               <strong>Song Genre</strong>:{" "}
-              {
-                track.primary_genres.music_genre_list[0].music_genre
-                  .music_genre_name
-              }
+              {track.primary_genres.music_genre_list.length !== 0
+                ? track.primary_genres.music_genre_list[0].music_genre
+                    .music_genre_name
+                : "N/A"}
             </li>
             <li className="list-group-item">
               <strong>Explicit Words</strong>:{" "}
